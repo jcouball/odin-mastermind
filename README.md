@@ -1,28 +1,42 @@
 # Odin::Mastermind
 
-TODO: Delete this and the text below, and describe your gem
+An implementation of [the Mastermind game](https://www.wikihow.com/Play-Mastermind).
+This project was created as part of [The Odin Project's
+curriculum](https://www.theodinproject.com/lessons/ruby-mastermind).
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/odin/mastermind`. To experiment with that code, run `bin/console` for an interactive prompt.
+* **Executable**: The command-line script can be found at
+  [exe/odin-mastermind](exe/odin-mastermind).
+
+* **Source Code**: The main library code is located in
+  [lib/odin/mastermind/](lib/odin/mastermind/).
+
+* **Tests**: The project includes a full RSpec test suite with 100% branch coverage,
+  which can be found in [spec/odin/mastermind/](spec/odin/mastermind/).
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+**NOTE** This project is a demonstration only and its gem has not been published to
+rubygems.org.
 
-Install the gem and add to the application's Gemfile by executing:
+To install the odin-mastermind gem, clone the project, run `bin/setup` and then
+install the project gem locally:
 
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
-```
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```shell
+git clone https://github.com/jcouball/odin-mastermind
+cd odin-mastermind
+bin/setup
+bundle exec rake install
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+Once installed, you can run the game using the `odin-mastermind` command line
+script:
+
+```shell
+$ odin-mastermind
+TODO: write output here
+```
 
 ## Development
 

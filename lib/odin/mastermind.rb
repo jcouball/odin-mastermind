@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "mastermind/version"
+require_relative 'mastermind/version'
 
 module Odin
   module Mastermind
