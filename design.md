@@ -1,5 +1,8 @@
 # Mastermind Design
 
+Since the domain is pretty well known, I will do a little up-front design and then
+use a inside-out TDD to implement the game.
+
 ## Domain
 
 * Possible Code Peg colors: %i[red blue green yellow orange black]
