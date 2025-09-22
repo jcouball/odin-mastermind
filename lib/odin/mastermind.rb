@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'mastermind/code'
+require_relative 'mastermind/feedback'
 require_relative 'mastermind/version'
 
 module Odin
