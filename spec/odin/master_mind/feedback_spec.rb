@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-
 RSpec.describe Odin::Mastermind::Feedback do
   let(:instance) { described_class.new(secret_code:, guess:) }
 

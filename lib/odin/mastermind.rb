@@ -2,6 +2,7 @@
 
 require_relative 'mastermind/code'
 require_relative 'mastermind/feedback'
+require_relative 'mastermind/turn'
 require_relative 'mastermind/version'
 
 module Odin
