@@ -3,6 +3,7 @@
 require_relative 'mastermind/board'
 require_relative 'mastermind/code'
 require_relative 'mastermind/computer_player'
+require_relative 'mastermind/command_line_io'
 require_relative 'mastermind/configuration'
 require_relative 'mastermind/feedback'
 require_relative 'mastermind/human_player'

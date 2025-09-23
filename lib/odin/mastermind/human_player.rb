@@ -21,8 +21,8 @@ module Odin
         game_io.create_secret_code
       end
 
-      def make_guess(board:) # rubocop:disable Lint/UnusedMethodArgument
-        game_io.make_guess
+      def make_guess(board:)
+        game_io.make_guess(board:)
       end
     end
   end
