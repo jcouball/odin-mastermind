@@ -13,6 +13,18 @@ curriculum](https://www.theodinproject.com/lessons/ruby-mastermind).
 * **Tests**: The project includes a full RSpec test suite with 100% branch coverage,
   which can be found in [spec/odin/mastermind/](spec/odin/mastermind/).
 
+## TODO
+
+* Do not allow duplicate moves
+* Allow the player to select to be the code maker or code breaker. The other player
+  is the computer.
+* Input name for human player and use that instead of "code maker" or "code breaker"
+* Improve how the computer makes guesses using [these strategies for solving
+  Mastermind](https://puzzling.stackexchange.com/questions/546/clever-ways-to-solve-mastermind)
+* Fill in the usage section below with one where the human is the code maker and one
+  where the human is the code breaker
+* Fix rubocop offense Metrics/ClassLength for CommandLineIO
+
 ## Installation
 
 **NOTE** This project is a demonstration only and its gem has not been published to
