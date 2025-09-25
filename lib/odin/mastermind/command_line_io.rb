@@ -55,33 +55,37 @@ module Odin
         end
       end
 
-      def show_empty_board
+      def show_board_header
         stdout.puts
         stdout.puts ' ═════ M A S T E R M I N D   B O A R D ══════'
         stdout.puts '┌──────┬─────────────────────────────┬───────┐'
         stdout.puts '│ Turn │ Guess                       │ Match │'
+      end
+
+      def show_board_footer
+        stdout.puts 'Available Colors'.center(46, ' ').rstrip
+        stdout.puts conjoin(COLORS).center(46, ' ').rstrip
+      end
+
+      def show_empty_board
+        show_board_header
         stdout.puts '├──────┴─────────────────────────────┴───────┤'
         stdout.puts '│     No guesses have been submitted yet     │'
         stdout.puts '└────────────────────────────────────────────┘'
+        show_board_footer
       end
 
       def show_board_with_turns(board:)
-        stdout.puts
-        stdout.puts '══════ M A S T E R M I N D   B O A R D ═══════'
-        stdout.puts '┌──────┬─────────────────────────────┬───────┐'
-        stdout.puts '│ Turn │ Guess                       │ Match │'
+        show_board_header
         stdout.puts '├──────┼─────────────────────────────┼───────┤'
-        show_turns(board:)
-        stdout.puts '└──────┴─────────────────────────────┴───────┘'
-      end
-
-      def show_turns(board:)
         board.turns.each_with_index do |turn, index|
           num = (index + 1).to_s.rjust(4, ' ')
           guess = guess(turn)
           feedback = feedback(turn).ljust(5, ' ')
           stdout.puts "│ #{num} │ #{guess} │ #{feedback} │"
         end
+        stdout.puts '└──────┴─────────────────────────────┴───────┘'
+        show_board_footer
       end
 
       # Prompts the code breaker to enter their next guess
@@ -121,7 +125,7 @@ module Odin
         stdout.puts "Guess the secret code which contains #{config.code_length} values"
         stdout.puts
         stdout.puts 'Each value in the secret code is one of these colors:'
-        stdout.puts contraction(COLORS, 'or')
+        stdout.puts conjoin(COLORS, 'or')
       end
 
       def show_example_input
@@ -170,7 +174,7 @@ module Odin
         invalid_colors = colors.reject { |color| COLORS.include?(color) }.uniq
         return true if invalid_colors.empty?
 
-        invalid_colors_string = contraction(invalid_colors)
+        invalid_colors_string = conjoin(invalid_colors)
         if invalid_colors.one?
           stdout.puts "Error: #{invalid_colors_string} is not a valid color. Please try again."
         else
@@ -188,13 +192,13 @@ module Odin
 
       # Creates a comma separated string of the given array of strings using oxford comma rules
       # @param array [Array<String>] the array of string to join
-      def contraction(array, contraction = 'and')
+      def conjoin(array, conjunction = 'and')
         return array[0] if array.length == 1
         return "#{array[0]} and #{array[1]}" if array.length == 2
 
-        before_contraction = array[0..(array.length - 2)]
-        after_contraction = array[-1]
-        "#{before_contraction.join(', ')}, #{contraction} #{after_contraction}"
+        before_conjunction = array[0..(array.length - 2)]
+        after_conjunction = array[-1]
+        "#{before_conjunction.join(', ')}, #{conjunction} #{after_conjunction}"
       end
     end
   end
