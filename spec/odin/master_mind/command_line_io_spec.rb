@@ -100,10 +100,12 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
 
         expect(stdout.string).to eq(<<~OUTPUT)
 
-          M A S T E R M I N D   B O A R D
-          Turn  Guess                        Match
-          ----  ---------------------------  -----
-          No guesses have been submitted yet
+           ═════ M A S T E R M I N D   B O A R D ══════
+          ┌──────┬─────────────────────────────┬───────┐
+          │ Turn │ Guess                       │ Match │
+          ├──────┴─────────────────────────────┴───────┤
+          │     No guesses have been submitted yet     │
+          └────────────────────────────────────────────┘
         OUTPUT
       end
     end
@@ -119,11 +121,13 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
 
         expect(stdout.string).to eq(<<~OUTPUT)
 
-          M A S T E R M I N D   B O A R D
-          Turn  Guess                        Match
-          ----  ---------------------------  -----
-            01  red    red    blue   blue    XO
-            02  green  green  yellow yellow  XO
+          ══════ M A S T E R M I N D   B O A R D ═══════
+          ┌──────┬─────────────────────────────┬───────┐
+          │ Turn │ Guess                       │ Match │
+          ├──────┼─────────────────────────────┼───────┤
+          │    1 │ red    red    blue   blue   │ XO    │
+          │    2 │ green  green  yellow yellow │ XO    │
+          └──────┴─────────────────────────────┴───────┘
         OUTPUT
       end
     end

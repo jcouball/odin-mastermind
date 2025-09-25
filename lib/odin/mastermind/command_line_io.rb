@@ -48,14 +48,39 @@ module Odin
       # @return [void]
       #
       def show_board(board:)
-        stdout.puts
-        stdout.puts 'M A S T E R M I N D   B O A R D'
-        stdout.puts 'Turn  Guess                        Match'
-        stdout.puts '----  ---------------------------  -----'
         if board.turns.empty?
-          stdout.puts 'No guesses have been submitted yet'
+          show_empty_board
         else
-          show_turns(board:)
+          show_board_with_turns(board:)
+        end
+      end
+
+      def show_empty_board
+        stdout.puts
+        stdout.puts ' ═════ M A S T E R M I N D   B O A R D ══════'
+        stdout.puts '┌──────┬─────────────────────────────┬───────┐'
+        stdout.puts '│ Turn │ Guess                       │ Match │'
+        stdout.puts '├──────┴─────────────────────────────┴───────┤'
+        stdout.puts '│     No guesses have been submitted yet     │'
+        stdout.puts '└────────────────────────────────────────────┘'
+      end
+
+      def show_board_with_turns(board:)
+        stdout.puts
+        stdout.puts '══════ M A S T E R M I N D   B O A R D ═══════'
+        stdout.puts '┌──────┬─────────────────────────────┬───────┐'
+        stdout.puts '│ Turn │ Guess                       │ Match │'
+        stdout.puts '├──────┼─────────────────────────────┼───────┤'
+        show_turns(board:)
+        stdout.puts '└──────┴─────────────────────────────┴───────┘'
+      end
+
+      def show_turns(board:)
+        board.turns.each_with_index do |turn, index|
+          num = (index + 1).to_s.rjust(4, ' ')
+          guess = guess(turn)
+          feedback = feedback(turn).ljust(5, ' ')
+          stdout.puts "│ #{num} │ #{guess} │ #{feedback} │"
         end
       end
 
@@ -103,13 +128,6 @@ module Odin
         stdout.puts
         stdout.puts 'Example guess input:'
         stdout.puts 'red blue green yellow'
-      end
-
-      def show_turns(board:)
-        board.turns.each_with_index do |turn, index|
-          num = (index + 1).to_s.rjust(2, '0')
-          stdout.puts "  #{num}  #{guess(turn)}  #{feedback(turn)}"
-        end
       end
 
       def guess(turn)
