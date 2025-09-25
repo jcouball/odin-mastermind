@@ -54,9 +54,9 @@ module Odin
 
       def make_guesses
         until board.game_over?
-          game_io.show_board(board:)
           guess = code_breaker.make_guess(board:)
           board.add_guess(guess:)
+          game_io.show_board(board:)
         end
       end
 

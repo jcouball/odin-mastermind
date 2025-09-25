@@ -4,7 +4,7 @@ require_relative 'turn'
 module Odin
   module Mastermind
     # Manages getting input from and sending output to the command line
-    class CommandLineIO
+    class CommandLineIO # rubocop:disable Metrics/ClassLength
       COLORS = %w[red blue green yellow orange black].freeze
 
       # @param config [Configuration] the game configuration
@@ -28,7 +28,9 @@ module Odin
       # @return [void]
       #
       def start_game
-        stdout.puts "Welcome to Mastermind\n"
+        show_welcome_message
+        show_instructions
+        show_example_input
       end
 
       # Prompts the code maker to enter the secret code for the game
@@ -46,6 +48,7 @@ module Odin
       # @return [void]
       #
       def show_board(board:)
+        stdout.puts
         stdout.puts 'M A S T E R M I N D   B O A R D'
         stdout.puts 'Turn  Guess                        Match'
         stdout.puts '----  ---------------------------  -----'
@@ -74,10 +77,33 @@ module Odin
       # @return [void]
       #
       def announce_winner(board:)
+        stdout.puts
         stdout.puts "The #{winner(board)} wins after #{board.turns.length} guesses"
+        return unless board.winner == :code_maker
+
+        stdout.puts "The secret code was: #{board.secret_code.values.map { |v| COLORS[v] }.join(' ')}"
       end
 
       private
+
+      def show_welcome_message
+        stdout.puts
+        stdout.puts 'Welcome to Mastermind'
+      end
+
+      def show_instructions
+        stdout.puts
+        stdout.puts "Guess the secret code which contains #{config.code_length} values"
+        stdout.puts
+        stdout.puts 'Each value in the secret code is one of these colors:'
+        stdout.puts contraction(COLORS, 'or')
+      end
+
+      def show_example_input
+        stdout.puts
+        stdout.puts 'Example guess input:'
+        stdout.puts 'red blue green yellow'
+      end
 
       def show_turns(board:)
         board.turns.each_with_index do |turn, index|
@@ -102,17 +128,20 @@ module Odin
         board.winner == :code_breaker ? 'code breaker' : 'code maker'
       end
 
+      # @param prompt [String] the prompt for the user
+      # @return [Code] the code input from the user
       def prompt_for_code(prompt)
-        loop do
-          stdout.puts prompt
-          input = stdin.gets.chomp.downcase
-          colors = input.split
+        colors = Enumerator.produce { ask_for_colors(prompt) }.find { |input| valid_colors?(input) }
+        values = colors.map { |color| COLORS.index(color) }
+        Code.new(values:, code_length: config.code_length, value_range: config.value_range)
+      end
 
-          next unless valid_colors?(colors)
-
-          values = colors.map { |color| COLORS.index(color) }
-          return Code.new(values:, code_length: config.code_length, value_range: config.value_range)
-        end
+      # @param prompt [String] the prompt for the user
+      # @return [Array<String>] the colors the user input
+      def ask_for_colors(prompt)
+        stdout.puts
+        stdout.puts prompt
+        stdin.gets.chomp.downcase.split
       end
 
       def valid_colors?(colors)
@@ -120,7 +149,7 @@ module Odin
       end
 
       def valid_color_names?(colors)
-        invalid_colors = colors.reject { |color| COLORS.include?(color) }
+        invalid_colors = colors.reject { |color| COLORS.include?(color) }.uniq
         return true if invalid_colors.empty?
 
         invalid_colors_string = contraction(invalid_colors)
@@ -141,13 +170,13 @@ module Odin
 
       # Creates a comma separated string of the given array of strings using oxford comma rules
       # @param array [Array<String>] the array of string to join
-      def contraction(array)
+      def contraction(array, contraction = 'and')
         return array[0] if array.length == 1
         return "#{array[0]} and #{array[1]}" if array.length == 2
 
         before_contraction = array[0..(array.length - 2)]
         after_contraction = array[-1]
-        "#{before_contraction.join(', ')}, and #{after_contraction}"
+        "#{before_contraction.join(', ')}, #{contraction} #{after_contraction}"
       end
     end
   end

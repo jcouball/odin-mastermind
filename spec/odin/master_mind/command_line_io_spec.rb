@@ -14,7 +14,7 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
   let(:value_range) { 0..5 }
   let(:max_turns) { 12 }
 
-  let(:stdout) { double('stdout') }
+  let(:stdout) { StringIO.new }
   let(:stdin) { double('stdin') }
 
   describe '.new' do
@@ -24,11 +24,22 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
   end
 
   describe '#start_game' do
-    subject { described_object.start_game }
+    subject(:start_game) { described_object.start_game }
 
     it 'should announce the beginning of the game' do
-      expect(stdout).to receive(:puts).with("Welcome to Mastermind\n")
-      subject
+      start_game
+      expect(stdout.string).to eq(<<~OUTPUT)
+
+        Welcome to Mastermind
+
+        Guess the secret code which contains 4 values
+
+        Each value in the secret code is one of these colors:
+        red, blue, green, yellow, orange, or black
+
+        Example guess input:
+        red blue green yellow
+      OUTPUT
     end
   end
 
@@ -37,10 +48,10 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
 
     context 'when a valid secret code is given' do
       it 'should return a Code' do
-        expect(stdout).to receive(:puts).with('Enter the secret code:')
         expect(stdin).to receive(:gets).and_return("#{secret_code_colors.join(' ')}\n")
 
         expect(subject.values).to eq(secret_code.values)
+        expect(stdout.string).to eq("\nEnter the secret code:\n")
       end
     end
 
@@ -48,32 +59,34 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
       invalid_data = [
         ['gold', 'Error: gold is not a valid color. Please try again.'],
         ['gold silver', 'Error: gold and silver are not valid colors. Please try again.'],
-        ['gold silver gray', 'Error: gold, silver, and gray are not valid colors. Please try again.']
+        ['gold silver gray', 'Error: gold, silver, and gray are not valid colors. Please try again.'],
+        ['gold gold silver', 'Error: gold and silver are not valid colors. Please try again.']
       ]
 
       invalid_data.each do |invalid_input, error_message|
         it 'should give an error message and reprompt for the secret code' do
           valid_input = "#{secret_code_colors.join(' ')}\n"
-
-          allow(stdout).to receive(:puts).with('Enter the secret code:')
-          expect(stdout).to receive(:puts).with(error_message)
           expect(stdin).to receive(:gets).and_return(invalid_input, valid_input)
-
           expect(subject.values).to eq(secret_code.values)
+          expect(stdout.string).to eq("\nEnter the secret code:\n#{error_message}\n\nEnter the secret code:\n")
         end
       end
     end
 
     context 'when not enough colors are given' do
       it 'should give an error mesage and reprompt for the secret code' do
-        allow(stdout).to receive(:puts).with('Enter the secret code:')
-        expect(stdout).to receive(:puts).with('Error: the code needs to have 4 colors. Please try again.')
-
         invalid_input = 'blue green'
         valid_input = "#{secret_code_colors.join(' ')}\n"
         expect(stdin).to receive(:gets).and_return(invalid_input, valid_input)
 
         expect(subject.values).to eq(secret_code.values)
+        expect(stdout.string).to eq(<<~OUTPUT)
+
+          Enter the secret code:
+          Error: the code needs to have 4 colors. Please try again.
+
+          Enter the secret code:
+        OUTPUT
       end
     end
   end
@@ -83,15 +96,15 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
 
     context 'when there are not guesses yet' do
       it 'should output the board noting that no guesses have been entered' do
-        expected_output_lines = <<~OUTPUT.split("\n")
+        show_board
+
+        expect(stdout.string).to eq(<<~OUTPUT)
+
           M A S T E R M I N D   B O A R D
           Turn  Guess                        Match
           ----  ---------------------------  -----
           No guesses have been submitted yet
         OUTPUT
-        expected_output_lines.each { |line| expect(stdout).to receive(:puts).with(line) }
-
-        show_board
       end
     end
 
@@ -102,16 +115,16 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
       end
 
       it 'should output the board with the two guesses and feedback' do
-        expected_output_lines = <<~OUTPUT.split("\n")
+        show_board
+
+        expect(stdout.string).to eq(<<~OUTPUT)
+
           M A S T E R M I N D   B O A R D
           Turn  Guess                        Match
           ----  ---------------------------  -----
             01  red    red    blue   blue    XO
             02  green  green  yellow yellow  XO
         OUTPUT
-        expected_output_lines.each { |line| expect(stdout).to receive(:puts).with(line) }
-
-        show_board
       end
     end
   end
@@ -121,28 +134,29 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
 
     context 'when a valid guess is given' do
       it 'should return a Code' do
-        expect(stdout).to receive(:puts).with('There are 12 remaining guesses. Enter a guess:')
         guess = %w[red green black blue]
         guess_str = guess.join(' ')
         guess_values = guess.map { |color| Odin::Mastermind::CommandLineIO::COLORS.index(color) }
-
         expect(stdin).to receive(:gets).and_return("#{guess_str}\n")
-
         expect(subject.values).to eq(guess_values)
+        expect(stdout.string).to eq("\nThere are 12 remaining guesses. Enter a guess:\n")
       end
     end
   end
 
   describe '#announce_winner' do
-    subject { described_object.announce_winner(board:) }
+    subject(:announce_winner) { described_object.announce_winner(board:) }
 
     context 'when the code maker wins' do
       it 'should announce the that the code maker was the winner' do
         allow(board).to receive(:turns).and_return(Array.new(12))
         allow(board).to receive(:winner).and_return(:code_maker)
-        expect(stdout).to receive(:puts).with('The code maker wins after 12 guesses')
+        announce_winner
+        expect(stdout.string).to eq(<<~OUTPUT)
 
-        expect { subject }.not_to raise_error
+          The code maker wins after 12 guesses
+          The secret code was: red blue green yellow
+        OUTPUT
       end
     end
 
@@ -150,9 +164,11 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
       it 'should announce the that the code breaker was the winner' do
         allow(board).to receive(:turns).and_return(Array.new(8))
         allow(board).to receive(:winner).and_return(:code_breaker)
-        expect(stdout).to receive(:puts).with('The code breaker wins after 8 guesses')
+        announce_winner
+        expect(stdout.string).to eq(<<~OUTPUT)
 
-        expect { subject }.not_to raise_error
+          The code breaker wins after 8 guesses
+        OUTPUT
       end
     end
   end
