@@ -5,13 +5,16 @@ RSpec.describe Odin::Mastermind::GameEngine do
 
   let(:code_maker) { Odin::Mastermind::ComputerPlayer.new(name: 'Computer', config:) }
   let(:code_breaker) { Odin::Mastermind::HumanPlayer.new(name: 'Human', config:, game_io:) }
-  let(:game_io) { Odin::Mastermind::CommandLineIO.new(config:) }
+  let(:game_io) { Odin::Mastermind::CommandLineIO.new(config:, stdout:, stdin:) }
 
   let(:config) { Odin::Mastermind::Configuration.new(code_length:, value_range:, max_turns:) }
 
   let(:code_length) { 4 }
   let(:value_range) { 0..5 }
   let(:max_turns) { 3 } # Normally 12 turns are allowed, but for testing we will make it 3 turns
+
+  let(:stdout) { double('stdout') }
+  let(:stdin) { double('stdin') }
 
   describe '.new' do
     subject { described_object }
