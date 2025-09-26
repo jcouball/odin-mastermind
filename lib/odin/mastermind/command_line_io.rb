@@ -55,6 +55,33 @@ module Odin
         end
       end
 
+      # Prompts the code breaker to enter their next guess
+      #
+      # @param board [Board] the game board state up to this turn
+      #
+      # @return [Code] the guess entered
+      #
+      def make_guess(board:)
+        guesses_remaining = config.max_turns - board.turns.size
+        prompt_for_code("There are #{guesses_remaining} remaining guesses. Enter a guess:")
+      end
+
+      # Displays the game over message and announces the winner
+      #
+      # @param board [Board] the game board state
+      #
+      # @return [void]
+      #
+      def announce_winner(board:)
+        stdout.puts
+        stdout.puts "The #{winner(board)} wins after #{board.turns.length} guesses"
+        return unless board.winner == :code_maker
+
+        stdout.puts "The secret code was: #{board.secret_code.values.map { |v| COLORS[v] }.join(' ')}"
+      end
+
+      private
+
       def show_board_header
         stdout.puts
         stdout.puts ' ═════ M A S T E R M I N D   B O A R D ══════'
@@ -87,33 +114,6 @@ module Odin
         stdout.puts '└──────┴─────────────────────────────┴───────┘'
         show_board_footer
       end
-
-      # Prompts the code breaker to enter their next guess
-      #
-      # @param board [Board] the game board state up to this turn
-      #
-      # @return [Code] the guess entered
-      #
-      def make_guess(board:)
-        guesses_remaining = config.max_turns - board.turns.size
-        prompt_for_code("There are #{guesses_remaining} remaining guesses. Enter a guess:")
-      end
-
-      # Displays the game over message and announces the winner
-      #
-      # @param board [Board] the game board state
-      #
-      # @return [void]
-      #
-      def announce_winner(board:)
-        stdout.puts
-        stdout.puts "The #{winner(board)} wins after #{board.turns.length} guesses"
-        return unless board.winner == :code_maker
-
-        stdout.puts "The secret code was: #{board.secret_code.values.map { |v| COLORS[v] }.join(' ')}"
-      end
-
-      private
 
       def show_welcome_message
         stdout.puts
