@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Odin::Mastermind::Feedback do
-  let(:instance) { described_class.new(secret_code:, guess:) }
+  let(:described_object) { described_class.new(secret_code:, guess:) }
 
   let(:code_length) { 4 }
   let(:value_range) { 0..5 }
@@ -10,7 +10,7 @@ RSpec.describe Odin::Mastermind::Feedback do
   let(:guess) { Odin::Mastermind::Code.new(values: guess_values, code_length:, value_range:) }
 
   describe '.new' do
-    subject { instance }
+    subject { described_object }
 
     context 'when the guess has no values in common with the secret code' do
       let(:secret_code_values) { [0, 1, 2, 3] }
