@@ -17,7 +17,7 @@ module Odin
       # @return [Range] the range each code digit must be within
       attr_reader :value_range
 
-      def next_guess(*)
+      def next_guess(**)
         possible_values = value_range.to_a
         random_values = Array.new(code_length) { possible_values.sample }
         Code.new(values: random_values, code_length:, value_range:)
