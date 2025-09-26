@@ -17,6 +17,20 @@ module Odin
 
       attr_reader :values, :code_length, :value_range
 
+      # Return a Set of all possible codes given the code_length and value_range
+      #
+      # @param code_length [Integer] the number of integers that make up the code
+      #
+      # @param value_range [Range] the range that each integer must fall within
+      #
+      # @return [Set]
+      #
+      def self.all_possible_codes(code_length:, value_range:)
+        value_range.to_a.repeated_permutation(code_length).to_set do |values|
+          new(values:, code_length:, value_range:)
+        end
+      end
+
       include Comparable
 
       def <=>(other)

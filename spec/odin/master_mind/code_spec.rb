@@ -124,4 +124,37 @@ RSpec.describe Odin::Mastermind::Code do
       expect(subject).to eq(described_object.values.hash)
     end
   end
+
+  describe '.all_possible_codes' do
+    subject(:all_codes) { described_class.all_possible_codes(code_length:, value_range:) }
+
+    context 'with code_length: 2, value_range: 1..2' do
+      let(:code_length) { 2 }
+      let(:value_range) { 1..2 }
+
+      it 'should return 4 possible codes' do
+        expect(all_codes.size).to eq 4
+      end
+
+      it 'contains only Code objects' do
+        expect(all_codes).to all be_a(described_class)
+      end
+
+      it 'should return the expected codes' do
+        values = all_codes.map(&:values).sort
+        expected_values = [[1, 1], [1, 2], [2, 1], [2, 2]]
+        expect(values).to eq(expected_values)
+      end
+    end
+
+    context 'with standard Mastermind code_length: 4, value_range: 0..5' do
+      it 'should return 1296 codes' do
+        expect(all_codes.size).to eq(1296)
+      end
+
+      it 'contains only Code objects' do
+        expect(all_codes).to all be_a(described_class)
+      end
+    end
+  end
 end
