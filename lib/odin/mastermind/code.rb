@@ -17,10 +17,12 @@ module Odin
 
       attr_reader :values, :code_length, :value_range
 
-      def ==(other)
-        return false unless other.is_a?(Code)
+      include Comparable
 
-        values == other.values
+      def <=>(other)
+        return nil unless other.is_a?(Code)
+
+        values <=> other.values
       end
 
       def hash

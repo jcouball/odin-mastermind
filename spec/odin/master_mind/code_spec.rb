@@ -94,22 +94,27 @@ RSpec.describe Odin::Mastermind::Code do
     end
   end
 
-  describe '#==' do
-    subject { described_object == other }
+  describe '#<=>' do
+    subject { described_object <=> other }
 
     context 'when other has the same values' do
       let(:other) { described_class.new(values:, code_length:, value_range:) }
-      it { is_expected.to eq(true) }
+      it { is_expected.to eq(0) }
     end
 
-    context 'when other has different values' do
+    context 'when other is less than' do
       let(:other) { described_class.new(values: [0, 0, 0, 0], code_length:, value_range:) }
-      it { is_expected.to eq(false) }
+      it { is_expected.to eq(1) }
     end
 
-    context 'when other is not a code' do
+    context 'when other is greater than' do
+      let(:other) { described_class.new(values: [5, 5, 5, 5], code_length:, value_range:) }
+      it { is_expected.to eq(-1) }
+    end
+
+    context 'when other is not a Code' do
       let(:other) { 'not a Code' }
-      it { is_expected.to eq(false) }
+      it { is_expected.to eq(nil) }
     end
   end
 
