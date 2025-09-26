@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Odin::Mastermind::CommandLineIO do
+  let(:colors) { described_class::COLORS }
+
   let(:described_object) { described_class.new(config:, stdout:, stdin:) }
   let(:config) { Odin::Mastermind::Configuration.new(code_length:, value_range:, max_turns:) }
 
   let(:secret_code_values) { [0, 1, 2, 3] }
   let(:secret_code) { Odin::Mastermind::Code.new(values: secret_code_values, code_length:, value_range:) }
-  let(:secret_code_colors) { secret_code_values.map { |value| Odin::Mastermind::CommandLineIO::COLORS[value] } }
+  let(:secret_code_colors) { secret_code_values.map { |value| colors[value] } }
 
   let(:board) { Odin::Mastermind::Board.new(secret_code:, max_turns:) }
 
@@ -144,9 +146,12 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
       it 'should return a Code' do
         guess = %w[red green black blue]
         guess_str = guess.join(' ')
-        guess_values = guess.map { |color| Odin::Mastermind::CommandLineIO::COLORS.index(color) }
+        guess_values = guess.map { |color| colors.index(color) }
         expect(stdin).to receive(:gets).and_return("#{guess_str}\n")
-        expect(subject.values).to eq(guess_values)
+
+        guess = subject
+
+        expect(guess.values).to eq(guess_values)
         expect(stdout.string).to eq("\nThere are 12 remaining guesses. Enter a guess:\n")
       end
     end
@@ -178,6 +183,16 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
           The code breaker wins after 8 guesses
         OUTPUT
       end
+    end
+  end
+
+  describe '#show_duplicate_guess_error' do
+    subject(:show_error) { described_object.show_duplicate_guess_error(guess:) }
+    let(:guess) { Odin::Mastermind::Code.new(values: [0, 1, 2, 3], code_length:, value_range:) }
+
+    it 'prints a duplicate guess error message' do
+      show_error
+      expect(stdout.string).to eq("\nError: You've already guessed 'red blue green yellow'. Please try again.\n")
     end
   end
 end

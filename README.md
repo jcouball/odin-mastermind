@@ -15,9 +15,6 @@ curriculum](https://www.theodinproject.com/lessons/ruby-mastermind).
 
 ## TODO
 
-* Do not allow duplicate moves
-* Allow the player to select to be the code maker or code breaker. The other player
-  is the computer.
 * Input name for human player and use that instead of "code maker" or "code breaker"
 * Improve how the computer makes guesses using [these strategies for solving
   Mastermind](https://puzzling.stackexchange.com/questions/546/clever-ways-to-solve-mastermind)

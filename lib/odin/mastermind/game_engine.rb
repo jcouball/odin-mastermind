@@ -55,7 +55,7 @@ module Odin
       def make_guesses
         until board.game_over?
           game_io.show_board(board:)
-          guess = code_breaker.make_guess(board:)
+          guess = make_guess
           board.add_guess(guess:)
         end
       end
@@ -63,6 +63,19 @@ module Odin
       def end_game
         game_io.show_board(board:)
         game_io.announce_winner(board:)
+      end
+
+      def make_guess
+        loop do
+          guess = code_breaker.make_guess(board:)
+          return guess unless duplicate_guess?(guess:)
+
+          game_io.show_duplicate_guess_error(guess:)
+        end
+      end
+
+      def duplicate_guess?(guess:)
+        board.turns.map(&:guess).include?(guess)
       end
     end
   end

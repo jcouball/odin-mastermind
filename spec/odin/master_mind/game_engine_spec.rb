@@ -77,5 +77,35 @@ RSpec.describe Odin::Mastermind::GameEngine do
         expect(described_object.board.turns.length).to eq(3)
       end
     end
+
+    context 'the code breaker enters a duplicate entry' do
+      let(:first_guess) { Odin::Mastermind::Code.new(values: [1, 1, 1, 1], code_length:, value_range:) }
+      let(:duplicate_guess) { first_guess }
+      let(:winning_guess) { Odin::Mastermind::Code.new(values: [1, 2, 3, 4], code_length:, value_range:) }
+
+      let(:guesses) do
+        [
+          first_guess,
+          duplicate_guess, # same as first_guess
+          winning_guess
+        ]
+      end
+
+      before do
+        allow(game_io).to receive(:start_game)
+        allow(game_io).to receive(:show_board)
+        allow(code_maker).to receive(:create_secret_code).and_return(secret_code)
+        allow(code_breaker).to receive(:make_guess).and_return(*guesses)
+        allow(game_io).to receive(:announce_winner).with(board: an_instance_of(Odin::Mastermind::Board))
+      end
+
+      it 'should not accept the duplicate guess' do
+        expect(game_io).to receive(:show_duplicate_guess_error).with(guess: duplicate_guess)
+        run_game
+        # after winning, there should be only two guesses on the board
+        guesses_on_the_board = described_object.board.turns.map(&:guess)
+        expect(guesses_on_the_board).to eq([first_guess, winning_guess])
+      end
+    end
   end
 end

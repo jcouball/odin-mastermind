@@ -66,6 +66,14 @@ module Odin
         prompt_for_code("There are #{guesses_remaining} remaining guesses. Enter a guess:")
       end
 
+      # @param guess [Code] the duplicate guess
+      #
+      def show_duplicate_guess_error(guess:)
+        colors = guess.values.map { |v| COLORS[v] }.join(' ')
+        stdout.puts
+        stdout.puts "Error: You've already guessed '#{colors}'. Please try again."
+      end
+
       # Displays the game over message and announces the winner
       #
       # @param board [Board] the game board state
