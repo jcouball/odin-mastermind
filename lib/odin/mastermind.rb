@@ -9,6 +9,7 @@ require_relative 'mastermind/feedback'
 require_relative 'mastermind/game_engine'
 require_relative 'mastermind/human_player'
 require_relative 'mastermind/player'
+require_relative 'mastermind/random_guessing_strategy'
 require_relative 'mastermind/turn'
 require_relative 'mastermind/version'
 

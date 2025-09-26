@@ -2,6 +2,7 @@
 
 require_relative 'code'
 require_relative 'player'
+require_relative 'random_guessing_strategy'
 
 module Odin
   module Mastermind
@@ -12,9 +13,12 @@ module Odin
         Code.new(values: random_values, code_length:, value_range:)
       end
 
-      def make_guess(board:) # rubocop:disable Lint/UnusedMethodArgument
-        # TODO: Will implement a better guessing algorithm later
-        Code.new(values: random_values, code_length:, value_range:)
+      def make_guess(board:)
+        guessing_strategy.next_guess(board:)
+      end
+
+      def guessing_strategy
+        @guessing_strategy ||= RandomGuessingStrategy.new(code_length:, value_range:)
       end
 
       private
