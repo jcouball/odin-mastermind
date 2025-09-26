@@ -17,6 +17,16 @@ module Odin
 
       attr_reader :values, :code_length, :value_range
 
+      def ==(other)
+        return false unless other.is_a?(Code)
+
+        values == other.values
+      end
+
+      def hash
+        values.hash
+      end
+
       private
 
       def validate_code_length(code_length)

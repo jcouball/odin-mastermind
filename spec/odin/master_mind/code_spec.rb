@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Odin::Mastermind::Code do
-  let(:instance) { described_class.new(values:, code_length:, value_range:) }
+  let(:described_object) { described_class.new(values:, code_length:, value_range:) }
 
   let(:values) { Array.new(code_length) { possible_values.sample } }
   let(:code_length) { 4 }
@@ -9,7 +9,7 @@ RSpec.describe Odin::Mastermind::Code do
   let(:possible_values) { value_range.to_a }
 
   describe '.new' do
-    subject { instance }
+    subject { described_object }
     it { is_expected.to be_a(described_class) }
     it { is_expected.to have_attributes(values:, code_length:, value_range:) }
 
@@ -91,6 +91,32 @@ RSpec.describe Odin::Mastermind::Code do
           expect { subject }.to raise_error(ArgumentError, 'All values must be of type Integer and within the range')
         end
       end
+    end
+  end
+
+  describe '#==' do
+    subject { described_object == other }
+
+    context 'when other has the same values' do
+      let(:other) { described_class.new(values:, code_length:, value_range:) }
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when other has different values' do
+      let(:other) { described_class.new(values: [0, 0, 0, 0], code_length:, value_range:) }
+      it { is_expected.to eq(false) }
+    end
+
+    context 'when other is not a code' do
+      let(:other) { 'not a Code' }
+      it { is_expected.to eq(false) }
+    end
+  end
+
+  describe '#hash' do
+    subject { described_object.hash }
+    it 'should be the hash of the values' do
+      expect(subject).to eq(described_object.values.hash)
     end
   end
 end

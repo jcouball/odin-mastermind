@@ -50,7 +50,7 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
       it 'should return a Code' do
         expect(stdin).to receive(:gets).and_return("#{secret_code_colors.join(' ')}\n")
 
-        expect(subject.values).to eq(secret_code.values)
+        expect(subject).to eq(secret_code)
         expect(stdout.string).to eq("\nEnter the secret code:\n")
       end
     end
@@ -67,7 +67,7 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
         it 'should give an error message and reprompt for the secret code' do
           valid_input = "#{secret_code_colors.join(' ')}\n"
           expect(stdin).to receive(:gets).and_return(invalid_input, valid_input)
-          expect(subject.values).to eq(secret_code.values)
+          expect(subject).to eq(secret_code)
           expect(stdout.string).to eq("\nEnter the secret code:\n#{error_message}\n\nEnter the secret code:\n")
         end
       end
@@ -79,7 +79,7 @@ RSpec.describe Odin::Mastermind::CommandLineIO do
         valid_input = "#{secret_code_colors.join(' ')}\n"
         expect(stdin).to receive(:gets).and_return(invalid_input, valid_input)
 
-        expect(subject.values).to eq(secret_code.values)
+        expect(subject).to eq(secret_code)
         expect(stdout.string).to eq(<<~OUTPUT)
 
           Enter the secret code:
