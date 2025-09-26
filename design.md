@@ -92,3 +92,49 @@ The implementation will be separated into distinct layers:
 * Turn
   * Has a guess submitted by the code_breaker
   * Has feedback submitted by the code_maker
+
+## An algorithm for computing Mastermind guesses
+
+This gem implements Donald Knuth's algorithm for computing Mastermind guesses. It is
+copied from [this StackExchange
+article](https://puzzling.stackexchange.com/questions/546/clever-ways-to-solve-mastermind)
+and turned into a step-by-step solution.
+
+1. Create the set `all_possible_codes` of 1296 possible codes, 1111,1112,.., 6666.
+
+2. Create the set `possible_secret_codes` which starts off as a copy of
+   `all_possible_codes`. This set will need to be persisted between turns.
+
+3. Start with initial `guess` 1122.
+
+4. Play the `guess` to get the feedback of exact and partial matches.
+
+5. If the feedback is four exact matches the game is won, the algorithm terminates.
+
+6. Remove any codes from `possible_secret_codes` which would not give the same
+   feedback for `guess`.
+
+7. Create the set `unused_codes` which is the codes from `all_possible_codes` that
+   have not been already been played in the game.
+
+8. Calculate the minimax score for each `unused_code` as follows:
+
+   1. Get feedback for using the `unused_code` as a guess for each
+      `possible_secret_code`
+   2. Tally the count of each feedback combination (each combination of exact/partial
+      matches -- there are 14 different combinations)
+   3. The score for each feedback combination is the size of `possible_secret_codes`
+      minus the number tallied for that feedback combination. This is the number of
+     `possible_secret_codes` that would be eliminated from this guess.
+   4. The minimax score of the `unused_code` is the minimum score for all feedback
+      combinations
+
+9. Create the set `possible_next_guesses` which is all the codes from `unused_codes`
+   tied for high score
+
+10. If there exists one or more guess from `possible_next_guesses` which is in also
+    in `possible_secret_codes`, then choose the guess with the lowest value as the
+    next `guess`. Otherwise, chose the code from `possible_next_guesses` with the
+    lowest value as the next `guess`
+
+11. Repeat from step 4
