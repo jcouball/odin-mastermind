@@ -157,4 +157,26 @@ RSpec.describe Odin::Mastermind::Code do
       end
     end
   end
+
+  describe '#eql?' do
+    subject { described_object.eql?(other) }
+    # values for described_object
+    let(:values) { [0, 0, 0, 0] }
+    let(:other) { described_class.new(values: other_values, code_length:, value_range:) }
+
+    context 'when other has the same values' do
+      let(:other_values) { [0, 0, 0, 0] }
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when other has different values' do
+      let(:other_values) { [1, 1, 1, 1] }
+      it { is_expected.to eq(false) }
+    end
+
+    context 'when other is not a Code' do
+      let(:other) { 'not a code' }
+      it { is_expected.to eq(false) }
+    end
+  end
 end

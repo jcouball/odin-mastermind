@@ -39,6 +39,12 @@ module Odin
         values <=> other.values
       end
 
+      def eql?(other)
+        return false unless other.is_a?(Code)
+
+        values == other.values
+      end
+
       def hash
         values.hash
       end
