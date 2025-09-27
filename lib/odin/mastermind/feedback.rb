@@ -33,6 +33,18 @@ module Odin
       # @return [Integer] the number of values in guess that are in secret_code that are not exact matches
       attr_reader :partial_matches
 
+      # true if the number of exact and partial matches are the same
+      #
+      # @param other [Feedback]
+      #
+      # @return [Boolean]
+      #
+      def ==(other)
+        return false unless other.is_a?(Feedback)
+
+        exact_matches == other.exact_matches && partial_matches == other.partial_matches
+      end
+
       private
 
       # Counts the number of exact matches between secret_code_values and guess_values

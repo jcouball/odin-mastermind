@@ -87,4 +87,41 @@ RSpec.describe Odin::Mastermind::Feedback do
       end
     end
   end
+  describe '#==' do
+    subject { described_object == other }
+
+    let(:secret_code_values) { [0, 1, 2, 3] }
+
+    # For other -- for testing they will have the same secret_code
+    let(:other_guess) { Odin::Mastermind::Code.new(values: other_guess_values, code_length:, value_range:) }
+    let(:other) { described_class.new(secret_code:, guess: other_guess) }
+
+    context 'when the other object has the same exact and partial match counts' do
+      let(:guess_values)       { [0, 1, 3, 2] } # 2 exact, 2 partial matches
+      let(:other_guess_values) { [1, 0, 2, 3] } # 2 exact, 2 partial matches
+
+      it { is_expected.to be true }
+    end
+
+    context 'when the other object has different exact match counts' do
+      let(:guess_values)       { [0, 1, 2, 3] } # 4 exact, 0 partial matches
+      let(:other_guess_values) { [0, 1, 2, 5] } # 3 exact, 0 partial matches
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the other object has different partial match counts' do
+      let(:guess_values)       { [0, 1, 3, 2] } # 2 exact, 2 partial matches
+      let(:other_guess_values) { [0, 1, 5, 5] } # 2 exact, 0 partial matches
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the other object is not a Feedback object' do
+      let(:guess_values) { [0, 1, 2, 3] } # doesn't matter what this is
+      let(:other) { 'not a Feedback' }
+
+      it { is_expected.to be false }
+    end
+  end
 end
