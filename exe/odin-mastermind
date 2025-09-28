@@ -21,7 +21,8 @@ config = Odin::Mastermind::Configuration.new(code_length: 4, value_range: 0..5, 
 game_io = Odin::Mastermind::CommandLineIO.new(stdout: $stdout, stdin: $stdin, config:)
 if user_type == 'maker'
   code_maker = Odin::Mastermind::HumanPlayer.new(name: 'Human', config:, game_io:)
-  code_breaker = Odin::Mastermind::ComputerPlayer.new(name: 'Computer', config:)
+  guessing_strategy = Odin::Mastermind::KnuthGuessingStrategy
+  code_breaker = Odin::Mastermind::ComputerPlayer.new(name: 'Computer', config:, guessing_strategy:)
 else
   code_maker = Odin::Mastermind::ComputerPlayer.new(name: 'Computer', config:)
   code_breaker = Odin::Mastermind::HumanPlayer.new(name: 'Human', config:, game_io:)
