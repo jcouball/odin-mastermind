@@ -15,8 +15,6 @@ curriculum](https://www.theodinproject.com/lessons/ruby-mastermind).
 
 ## TODO
 
-* Fill in the usage section below with one where the human is the code maker and one
-  where the human is the code breaker
 * Fix rubocop offense Metrics/ClassLength for CommandLineIO
 
 ## Installation
@@ -41,7 +39,75 @@ script:
 
 ```shell
 $ odin-mastermind
-TODO: write output here
+Do you want to be the Code Maker or the Code Breaker?
+Enter Maker or Breaker:  breaker
+
+Welcome to Mastermind
+
+Guess the secret code which contains 4 values
+
+Each value in the secret code is one of these colors:
+red, blue, green, yellow, orange, or black
+
+Example guess input:
+red blue green yellow
+
+ ═════ M A S T E R M I N D   B O A R D ══════
+┌──────┬─────────────────────────────┬───────┐
+│ Turn │ Guess                       │ Match │
+├──────┴─────────────────────────────┴───────┤
+│     No guesses have been submitted yet     │
+└────────────────────────────────────────────┘
+               Available Colors
+ red, blue, green, yellow, orange, and black
+
+There are 12 remaining guesses. Enter a guess:
+red red blue blue
+
+ ═════ M A S T E R M I N D   B O A R D ══════
+┌──────┬─────────────────────────────┬───────┐
+│ Turn │ Guess                       │ Match │
+├──────┼─────────────────────────────┼───────┤
+│    1 │ red    red    blue   blue   │       │
+└──────┴─────────────────────────────┴───────┘
+               Available Colors
+ red, blue, green, yellow, orange, and black
+
+There are 11 remaining guesses. Enter a guess:
+green green yellow yellow
+
+ ═════ M A S T E R M I N D   B O A R D ══════
+┌──────┬─────────────────────────────┬───────┐
+│ Turn │ Guess                       │ Match │
+├──────┼─────────────────────────────┼───────┤
+│    1 │ red    red    blue   blue   │       │
+│    2 │ green  green  yellow yellow │ O     │
+└──────┴─────────────────────────────┴───────┘
+               Available Colors
+ red, blue, green, yellow, orange, and black
+
+... other moves ...
+
+There are 6 remaining guesses. Enter a guess:
+black yellow black black
+
+ ═════ M A S T E R M I N D   B O A R D ══════
+┌──────┬─────────────────────────────┬───────┐
+│ Turn │ Guess                       │ Match │
+├──────┼─────────────────────────────┼───────┤
+│    1 │ red    red    blue   blue   │       │
+│    2 │ green  green  yellow yellow │ O     │
+│    3 │ black  black  orange orange │ XO    │
+│    4 │ black  black  red    red    │ XO    │
+│    5 │ black  black  black  red    │ XXO   │
+│    6 │ black  green  black  black  │ XXX   │
+│    7 │ black  yellow black  black  │ XXXX  │
+└──────┴─────────────────────────────┴───────┘
+               Available Colors
+ red, blue, green, yellow, orange, and black
+
+The code breaker wins after 7 guesses
+$
 ```
 
 ## Development
